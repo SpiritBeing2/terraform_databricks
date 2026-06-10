@@ -43,7 +43,8 @@ resource "databricks_catalog" "this" {
   comment      = "Development catalog"
   storage_root = "abfss://bronze@${azurerm_storage_account.this.name}.dfs.core.windows.net/catalog/dev"
   depends_on = [
-    databricks_metastore_assignment.this
+    databricks_metastore_assignment.this,
+    databricks_external_location.this
   ]
 }
 
