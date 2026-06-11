@@ -1,19 +1,19 @@
 resource "azurerm_virtual_network" "this" {
-  name                = "vnet-adb-dev"
+  name                = "vnet-adb-${local.env}"
   location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name
   address_space       = ["10.10.0.0/16"]
 }
 
 resource "azurerm_network_security_group" "this" {
-  name                = "nsg-adb-dev"
+  name                = "nsg-adb-${local.env}"
   location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name
 }
 
 resource "azurerm_subnet" "public" {
 
-  name                 = "snet-adb-public"
+  name                 = "snet-adb-public-${local.env}"
   resource_group_name  = azurerm_resource_group.this.name
   virtual_network_name = azurerm_virtual_network.this.name
   address_prefixes     = ["10.10.1.0/24"]
@@ -33,7 +33,7 @@ resource "azurerm_subnet" "public" {
 
 resource "azurerm_subnet" "private" {
 
-  name                 = "snet-adb-private"
+  name                 = "snet-adb-private-${local.env}"
   resource_group_name  = azurerm_resource_group.this.name
   virtual_network_name = azurerm_virtual_network.this.name
   address_prefixes     = ["10.10.2.0/24"]

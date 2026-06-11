@@ -1,6 +1,6 @@
 resource "databricks_storage_credential" "this" {
   provider = databricks.workspace
-  name     = "sc-adls-dev-2"
+  name     = "sc-adls-${local.env}-2"
 
   azure_managed_identity {
     managed_identity_id = azurerm_user_assigned_identity.this.id
@@ -16,9 +16,9 @@ resource "databricks_storage_credential" "this" {
 
 
 resource "databricks_external_location" "this" {
-  name            = "extloc-bronze-dev-2"
+  name            = "extloc-bronze-${local.env}"
   provider        = databricks.workspace
-  url             = "abfss://bronze@${azurerm_storage_account.this.name}.dfs.core.windows.net/"
+  url             = "abfss://bronze-${local.env}@${azurerm_storage_account.this.name}.dfs.core.windows.net/"
   credential_name = databricks_storage_credential.this.name
   depends_on = [
     azurerm_storage_data_lake_gen2_filesystem.this
@@ -39,9 +39,9 @@ resource "databricks_metastore_assignment" "this" {
 
 resource "databricks_catalog" "this" {
   provider     = databricks.workspace
-  name         = "dev3"
+  name         = local.env
   comment      = "Development catalog"
-  storage_root = "abfss://bronze@${azurerm_storage_account.this.name}.dfs.core.windows.net/catalog/dev"
+  storage_root = "abfss://bronze-${local.env}@${azurerm_storage_account.this.name}.dfs.core.windows.net/catalog/dev"
   depends_on = [
     databricks_metastore_assignment.this,
     databricks_external_location.this
@@ -51,23 +51,18 @@ resource "databricks_catalog" "this" {
 resource "databricks_schema" "bronze" {
   provider     = databricks.workspace
   catalog_name = databricks_catalog.this.name
-  name         = "bronze"
+  name         = "bronze-${local.env}"
 }
 
 resource "databricks_schema" "silver" {
   provider     = databricks.workspace
   catalog_name = databricks_catalog.this.name
-  name         = "silver"
+  name         = "silver-${local.env}"
 }
 
 resource "databricks_schema" "gold" {
   provider     = databricks.workspace
   catalog_name = databricks_catalog.this.name
-  name         = "gold"
+  name         = "gold-${local.env}"
 }
-
-
-
-
-
 

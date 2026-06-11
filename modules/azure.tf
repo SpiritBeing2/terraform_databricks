@@ -4,7 +4,7 @@ resource "azurerm_resource_group" "this" {
 }
 
 resource "azurerm_storage_account" "this" {
-  name                = "stdatabricksdev003"
+  name                = "stdatabricks${local.env}003"
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
 
@@ -15,17 +15,17 @@ resource "azurerm_storage_account" "this" {
 }
 
 resource "azurerm_storage_data_lake_gen2_filesystem" "this" {
-  name               = "bronze"
+  name               = "bronze-${local.env}"
   storage_account_id = azurerm_storage_account.this.id
 }
 
 resource "azurerm_databricks_workspace" "this" {
-  name                = "dbw-dev3"
+  name                = "dbw-${local.env}"
   location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name
 
   sku                         = "premium"
-  managed_resource_group_name = "rg-adb-dev-managed2"
+  managed_resource_group_name = "rg-adb-${local.env}-managed"
 
 
   custom_parameters {

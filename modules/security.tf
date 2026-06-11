@@ -1,12 +1,12 @@
 resource "azurerm_user_assigned_identity" "this" {
-  name                = "mi-adb-dev"
+  name                = "mi-adb-${local.env}"
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
 
 }
 
 resource "azurerm_databricks_access_connector" "this" {
-  name                = "ac-dbx-uc-dev"
+  name                = "ac-dbx-uc-${local.env}"
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
 
@@ -24,6 +24,5 @@ resource "azurerm_role_assignment" "this" {
   role_definition_name = "Storage Blob Data Owner"
   principal_id         = azurerm_user_assigned_identity.this.principal_id
 }
-
 
 
