@@ -9,10 +9,5 @@ module "platform" {
   vault_name = var.vault_name
   cluster = var.cluster
 
-  providers = {
-    databricks.account = databricks.account
-    databricks.workspace = databricks.workspace
-  }
-	
 }
 
