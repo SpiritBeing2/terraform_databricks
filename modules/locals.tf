@@ -1,0 +1,6 @@
+locals {
+ 
+  env = var.environment
+
+}
+
